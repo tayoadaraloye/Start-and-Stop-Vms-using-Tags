@@ -1,0 +1,16 @@
+$connectionName = "AzureRunAsConnection"
+ # Get the connection "AzureRunAsConnection "
+    $servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
+
+    "Logging in to Azure..."
+    Add-AzureRmAccount `
+        -ServicePrincipal `
+        -TenantId $servicePrincipalConnection.TenantId `
+        -ApplicationId $servicePrincipalConnection.ApplicationId `
+        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 
+
+    ## Get the Azure VMs with tags matching the value '6am'
+    $azVMs = Get-AzureRMVM | Where-Object {$_.Tags.StartTime -eq '7am'}
+
+## Start VMs
+    $azVMS | Start-AzureRMVM
